@@ -21,6 +21,11 @@ app.use(express.json());
 app.use(cors());
 
 ////////////////////////////////////////////////////////////////////////////////
+// Routes
+app.use('/categories', require('./routes/categories'))
+app.use('/products', require('./routes/products'));
+
+////////////////////////////////////////////////////////////////////////////////
 // API endpoints
 app.get('/createTable/:name', (req, res) => {
     let sql;
@@ -58,54 +63,6 @@ app.get('/createTable/:name', (req, res) => {
     });
 });
 
-
-// CATEGORIES
-app.get('/categories', (req, res) => {
-    let sql = 'SELECT * FROM category';
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send(result);
-    });
-});
-
-app.get('/category/:id', (req, res) => {
-    let sql = 'SELECT * FROM category WHERE id = ?';
-    db.query(sql, [req.params.id], (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        res.send(result);
-    });
-})
-
-app.post('/category/', (req, res) => {
-    if (req.body.name) {
-        const sql = `INSERT INTO category (name) VALUES (?)`;
-        db.query(sql, [req.body.name], (err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.status(201).send('Category inserted.');
-        });
-
-    } else {
-        res.send('Category name is required.');
-    }
-});
-
-app.put('/category/:id', (req, res) => {
-    if (req.body.name) {
-        const sql = `UPDATE category SET name=? WHERE id=?`;
-        db.query(sql, [req.body.name, req.params.id], (err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.send(`Category updated.`);
-        });
-    } else {
-        res.send('Category name is required.');
-    }
-})
-
-// PRODUCTS
-app.use('/products', require('./routes/products'));
 
 
 ////////////////////////////////////////////////////////////////////////////////
