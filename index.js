@@ -193,6 +193,16 @@ app.put('/product/:id', (req, res) => {
     }
 });
 
+app.delete('/product/:id', (req, res) => {
+    let sql = `DELETE FROM product WHERE id = ?`;
+    db.query(sql, [req.params.id], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(result.affectedRows ? 'Product deleted' : 'Product not found');
+    });
+});
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Listen
