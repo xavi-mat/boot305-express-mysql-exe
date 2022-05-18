@@ -60,7 +60,7 @@ app.get('/createTable/:name', (req, res) => {
 
 app.post('/category/', (req, res) => {
     if (req.body.name) {
-        const sql = `INSERT INTO category (name) VALUES ?`;
+        const sql = `INSERT INTO category (name) VALUES (?)`;
         db.query(sql, [req.body.name], (err, result) => {
             if (err) throw err;
             console.log(result);
@@ -72,6 +72,19 @@ app.post('/category/', (req, res) => {
     }
 });
 
+app.put('/category/:id', (req, res) => {
+    if (req.body.name) {
+        const sql = `UPDATE category SET name=? WHERE id=?`;
+        db.query(sql, [req.body.name, req.params.id], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.status(201).send(`Category updated.`);
+        });
+    } else {
+        res.send('Category name is required.');
+    }
+})
+
 app.post('/product/', (req, res) => {
     // Check product data
     const newProduct = [
@@ -79,8 +92,8 @@ app.post('/product/', (req, res) => {
         req.body.description ? req.body.description: null,  // if empty, put null
         req.body.idCategory  ? req.body.idCategory:  null,  // if empty, put null
     ];
-    if (newProduct.name) {
-        const sql = `INSERT INTO product (name, description, idCategory) VALUES ?`;
+    if (req.body.name) {
+        const sql = `INSERT INTO product (name, description, idCategory) VALUES (?)`;
         db.query(sql, [newProduct], (err, result) => {
             if (err) throw err;
             console.log(result);
@@ -91,6 +104,26 @@ app.post('/product/', (req, res) => {
         res.send('Product name is required.');
     }
 });
+
+app.put('/product/:id', (req, res) => {
+    // Check product data
+    const product = {
+        name: req.body.name,
+        description: req.body.description ? req.body.description: null,  // if empty, put null
+        idCategory: req.body.idCategory  ? req.body.idCategory:  null,  // if empty, put null
+    };
+    if (req.body.name) {
+        const sql = `UPDATE product SET ? WHERE id=?`;
+        db.query(sql, [product, req.params.id], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.status(201).send('Product updated.');
+        });
+    } else {
+        res.send('Product name is required.');
+    }
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Listen
