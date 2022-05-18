@@ -68,6 +68,15 @@ app.get('/categories', (req, res) => {
     });
 });
 
+app.get('/category/:id', (req, res) => {
+    let sql = 'SELECT * FROM category WHERE id = ?';
+    db.query(sql, [req.params.id], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+    });
+})
+
 app.post('/category/', (req, res) => {
     if (req.body.name) {
         const sql = `INSERT INTO category (name) VALUES (?)`;
@@ -88,7 +97,7 @@ app.put('/category/:id', (req, res) => {
         db.query(sql, [req.body.name, req.params.id], (err, result) => {
             if (err) throw err;
             console.log(result);
-            res.status(201).send(`Category updated.`);
+            res.send(`Category updated.`);
         });
     } else {
         res.send('Category name is required.');
@@ -120,7 +129,7 @@ app.get('/product/:id', (req, res) => {
     db.query(sql, [req.params.id], (err, result) => {
         if (err) throw err;
         console.log(result);
-        res.status(201).send(result);
+        res.send(result);
     });
 });
 
@@ -166,7 +175,7 @@ app.put('/product/:id', (req, res) => {
         db.query(sql, [product, req.params.id], (err, result) => {
             if (err) throw err;
             console.log(result);
-            res.status(201).send('Product updated.');
+            res.send('Product updated.');
         });
     } else {
         res.send('Product name is required.');
