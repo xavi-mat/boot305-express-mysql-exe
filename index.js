@@ -133,6 +133,17 @@ app.get('/product/:id', (req, res) => {
     });
 });
 
+app.get('/product/search/:name', (req, res) => {
+    let sql = `SELECT p.*, c.name AS cat FROM product p
+        LEFT JOIN category c ON p.idCategory = c.id
+        WHERE p.name LIKE ?`;
+    db.query(sql, [`%${req.params.name}%`], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+    });
+});
+
 app.get('/products-desc', (req, res) => {
     let sql = `SELECT p.*, c.name AS cat FROM product p
         LEFT JOIN category c ON p.idCategory=c.id
