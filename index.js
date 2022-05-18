@@ -58,6 +58,16 @@ app.get('/createTable/:name', (req, res) => {
     });
 });
 
+
+// CATEGORIES
+app.get('/categories', (req, res) => {
+    let sql = 'SELECT * FROM category';
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
 app.post('/category/', (req, res) => {
     if (req.body.name) {
         const sql = `INSERT INTO category (name) VALUES (?)`;
@@ -84,6 +94,15 @@ app.put('/category/:id', (req, res) => {
         res.send('Category name is required.');
     }
 })
+
+// PRODUCTS
+app.get('/products', (req, res) => {
+    let sql = 'SELECT * FROM product';
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
 app.post('/product/', (req, res) => {
     // Check product data
