@@ -51,7 +51,7 @@ app.get('/createTable/:name', (req, res) => {
             return;
     }
 
-    db.query(sql, (err, result)=>{
+    db.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
         res.send(`Table ${req.params.name} created.`)
@@ -104,12 +104,42 @@ app.get('/products', (req, res) => {
     });
 });
 
+app.get('/products-and-categories', (req, res) => {
+    let sql = `SELECT p.*, c.name AS cat FROM product p
+        LEFT JOIN category c ON p.idCategory=c.id`;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
+app.get('/product/:id', (req, res) => {
+    let sql = `SELECT p.*, c.name AS cat FROM product p
+        LEFT JOIN category c ON p.idCategory = c.id
+        WHERE p.id = ?`;
+    db.query(sql, [req.params.id], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.status(201).send(result);
+    });
+});
+
+app.get('/products-desc', (req, res) => {
+    let sql = `SELECT p.*, c.name AS cat FROM product p
+        LEFT JOIN category c ON p.idCategory=c.id
+        ORDER BY p.name DESC`;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
 app.post('/product/', (req, res) => {
     // Check product data
     const newProduct = [
         req.body.name,
-        req.body.description ? req.body.description: null,  // if empty, put null
-        req.body.idCategory  ? req.body.idCategory:  null,  // if empty, put null
+        req.body.description ? req.body.description : null,  // if empty, put null
+        req.body.idCategory ? req.body.idCategory : null,  // if empty, put null
     ];
     if (req.body.name) {
         const sql = `INSERT INTO product (name, description, idCategory) VALUES (?)`;
@@ -128,8 +158,8 @@ app.put('/product/:id', (req, res) => {
     // Check product data
     const product = {
         name: req.body.name,
-        description: req.body.description ? req.body.description: null,  // if empty, put null
-        idCategory: req.body.idCategory  ? req.body.idCategory:  null,  // if empty, put null
+        description: req.body.description ? req.body.description : null,  // if empty, put null
+        idCategory: req.body.idCategory ? req.body.idCategory : null,  // if empty, put null
     };
     if (req.body.name) {
         const sql = `UPDATE product SET ? WHERE id=?`;
