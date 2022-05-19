@@ -31,34 +31,9 @@ const SQL_CREATE = {
         name VARCHAR(45) NOT NULL,
         PRIMARY KEY (id)
     )`,
-    user: `CREATE TABLE user (
-        id INT AUTO_INCREMENT,
-        name VARCHAR(45) NOT NULL,
-        email VARCHAR(45) UNIQUE NOT NULL,
-        bio TEXT,
-        PRIMARY KEY (id)
-    )`,
-    order: `CREATE TABLE order (
-        id INT AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        date DATE DEFAULT CURRENT_DATE(),
-        PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES user(id)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
-    )`,
-    detail: `CREATE TABLE detail (
-        order_id INT,
-        product_id INT,
-        quantity INT NOT NULL,
-        PRIMARY KEY (order_id, product_id)
-        FOREIGN KEY (order_id) REFERENCES order(id)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
-        FOREIGN KEY (product_id) REFERENCES product(id)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
-    )`
+    user: `CREATE TABLE user (id INT AUTO_INCREMENT,name VARCHAR(45) NOT NULL, email VARCHAR(45) UNIQUE NOT NULL, bio TEXT, PRIMARY KEY (id))`,
+    order: 'CREATE TABLE orders (id INT AUTO_INCREMENT,user_id INT NOT NULL, date DATE DEFAULT (CURRENT_DATE) ,PRIMARY KEY (id),FOREIGN KEY (user_id) REFERENCES user(id)  ON DELETE RESTRICT ON UPDATE CASCADE)',
+    detail: 'CREATE TABLE detail (order_id INT, product_id INT, quantity INT NOT NULL,  PRIMARY KEY (order_id, product_id), FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE RESTRICT ON UPDATE CASCADE, FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE RESTRICT ON UPDATE CASCADE)'
 
 }
 ////////////////////////////////////////////////////////////////////////////////
