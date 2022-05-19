@@ -13,13 +13,13 @@ const UserController = {
             res.send(result);
         })
     },
-    // listAll(req, res) {
-    //     let sql = 'SELECT * FROM user';
-    //     db.query(sql, (err, result) => {
-    //         if (err) throw err;
-    //         res.send(result);
-    //     });
-    // },
+    updateUser(req, res) {
+        let sql = 'UPDATE user SET ? WHERE id = ?';
+        db.query(sql, [req.body, req.params.id], (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        })
+    }
 };
 
 

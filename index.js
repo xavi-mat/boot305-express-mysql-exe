@@ -46,6 +46,8 @@ app.use(cors());
 app.use('/categories', require('./routes/categories'))
 app.use('/products', require('./routes/products'));
 app.use('/users', require('./routes/users'));
+app.use('/orders', require('./routes/orders'));
+app.use('/details', require('./routes/details'));
 
 ////////////////////////////////////////////////////////////////////////////////
 // API endpoints
