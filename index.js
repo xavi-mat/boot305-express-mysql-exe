@@ -70,6 +70,7 @@ app.use(cors());
 // Routes
 app.use('/categories', require('./routes/categories'))
 app.use('/products', require('./routes/products'));
+app.use('/users', require('./routes/users'));
 
 ////////////////////////////////////////////////////////////////////////////////
 // API endpoints
