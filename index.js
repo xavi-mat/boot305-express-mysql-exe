@@ -11,10 +11,56 @@ const app = express();
 const cors = require('cors');
 const db = require('./config/database');
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
 const port = 3000;
+const SQL_CREATE = {
+    product: `CREATE TABLE product (
+        id INT AUTO_INCREMENT,
+        name VARCHAR(45) NOT NULL,
+        description VARCHAR(300),
+        idCategory INT,
+        PRIMARY KEY (id),
+        FOREIGN KEY (idCategory) REFERENCES category(id)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
+    )`,
+    category: `CREATE TABLE category (
+        id INT AUTO_INCREMENT,
+        name VARCHAR(45) NOT NULL,
+        PRIMARY KEY (id)
+    )`,
+    user: `CREATE TABLE user (
+        id INT AUTO_INCREMENT,
+        name VARCHAR(45) NOT NULL,
+        email VARCHAR(45) UNIQUE NOT NULL,
+        bio TEXT,
+        PRIMARY KEY (id)
+    )`,
+    order: `CREATE TABLE order (
+        id INT AUTO_INCREMENT,
+        user_id INT NOT NULL,
+        date DATE DEFAULT CURRENT_DATE(),
+        PRIMARY KEY (id),
+        FOREIGN KEY (user_id) REFERENCES user(id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
+    )`,
+    detail: `CREATE TABLE detail (
+        order_id INT,
+        product_id INT,
+        quantity INT NOT NULL,
+        PRIMARY KEY (order_id, product_id)
+        FOREIGN KEY (order_id) REFERENCES order(id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
+        FOREIGN KEY (product_id) REFERENCES product(id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
+    )`
 
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Middlewares
 app.use(express.json());
@@ -30,27 +76,11 @@ app.use('/products', require('./routes/products'));
 app.get('/createTable/:name', (req, res) => {
     let sql;
     switch (req.params.name) {
-        case 'product':
-            sql = `CREATE TABLE product (
-                id INT AUTO_INCREMENT,
-                name VARCHAR(45) NOT NULL,
-                description VARCHAR(300),
-                idCategory INT,
-                PRIMARY KEY (id),
-                FOREIGN KEY (idCategory) REFERENCES category(id)
-                    ON DELETE SET NULL
-                    ON UPDATE CASCADE
-            )`;
-            break;
-
-        case 'category':
-            sql = `CREATE TABLE category (
-                id INT AUTO_INCREMENT,
-                name VARCHAR(45) NOT NULL,
-                PRIMARY KEY (id)
-            )`;
-            break;
-
+        case 'product':  sql = SQL_CREATE.product;  break;
+        case 'category': sql = SQL_CREATE.category; break;
+        case 'user':     sql = SQL_CREATE.user;     break;
+        case 'order':    sql = SQL_CREATE.order;    break;
+        case 'detail':   sql = SQL_CREATE.detail;   break;
         default:
             res.status(400).send("Invalid Table Name");
             return;
