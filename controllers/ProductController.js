@@ -43,7 +43,7 @@ const ProductController = {
             res.send(result);
         });
     },
-    addPost(req, res) {
+    addProduct(req, res) {
         // Check product data
         const newProduct = [
             req.body.name,
