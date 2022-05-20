@@ -26,6 +26,14 @@ const UserController = {
             if (err) throw err;
             res.send(result);
         })
+    },
+    listAllWithOrders(req, res) {
+        let sql = 'SELECT * FROM user';
+        let finalResult = [];
+        db.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(finalResult);
+        })
     }
 };
 
